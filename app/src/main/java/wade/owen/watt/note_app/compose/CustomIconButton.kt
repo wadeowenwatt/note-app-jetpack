@@ -9,16 +9,24 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import wade.owen.watt.note_app.ui.theme.IconButtonBg
 
 @Composable
-fun CustomIconButton(onClick: () -> Unit, icon: ImageVector, contentDescription: String) {
+fun CustomIconButton(
+    onClick: () -> Unit,
+    icon: ImageVector,
+    contentDescription: String,
+    modifier: Modifier = Modifier,
+    modifierIcon: Modifier = Modifier,
+) {
     Button(
         onClick = onClick,
         shape = RoundedCornerShape(15.dp),
-        modifier = Modifier.size(50.dp),
+        modifier = modifier.size(50.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = IconButtonBg,
             contentColor = Color.White,
@@ -28,7 +36,33 @@ fun CustomIconButton(onClick: () -> Unit, icon: ImageVector, contentDescription:
         Icon(
             imageVector = icon,
             contentDescription = contentDescription,
-            Modifier.size(24.dp),
+            modifierIcon.size(24.dp),
+        )
+    }
+}
+
+@Composable
+fun CustomIconButton(
+    onClick: () -> Unit,
+    painter: Painter,
+    contentDescription: String,
+    modifier: Modifier = Modifier,
+    modifierIcon: Modifier = Modifier,
+) {
+    Button(
+        onClick = onClick,
+        shape = RoundedCornerShape(15.dp),
+        modifier = modifier.size(50.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = IconButtonBg,
+            contentColor = Color.White,
+        ),
+        contentPadding = PaddingValues(0.dp)
+    ) {
+        Icon(
+            painter = painter,
+            contentDescription = contentDescription,
+            modifierIcon.size(24.dp),
         )
     }
 }
