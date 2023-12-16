@@ -3,10 +3,13 @@ package wade.owen.watt.note_app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import dagger.hilt.EntryPoint
+import dagger.hilt.android.AndroidEntryPoint
 import wade.owen.watt.note_app.ui.navigation.NavGraph
 import wade.owen.watt.note_app.ui.screen.home.HomeScreen
 import wade.owen.watt.note_app.ui.screen.note_detail.NoteDetailScreen
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
