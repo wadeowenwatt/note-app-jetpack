@@ -1,4 +1,4 @@
-package wade.owen.watt.note_app.compose
+package wade.owen.watt.note_app.ui.compose
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
