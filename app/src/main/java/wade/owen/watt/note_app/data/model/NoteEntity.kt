@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import javax.annotation.Nonnull
 
-@Entity
+@Entity(tableName = "note")
 data class NoteEntity(
     @PrimaryKey val id: Int,
     @Nonnull @ColumnInfo(name = "title")

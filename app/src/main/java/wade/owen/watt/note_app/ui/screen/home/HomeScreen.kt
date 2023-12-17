@@ -1,10 +1,8 @@
 package wade.owen.watt.note_app.ui.screen.home
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,52 +16,37 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DismissDirection
-import androidx.compose.material3.DismissState
-import androidx.compose.material3.DismissValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import wade.owen.watt.note_app.R
 import wade.owen.watt.note_app.ui.compose.CustomIconButton
 import wade.owen.watt.note_app.ui.screen.home.component.ItemNoteSwipeable
-import wade.owen.watt.note_app.ui.theme.Lavender
-import wade.owen.watt.note_app.ui.theme.LightGreen
 import wade.owen.watt.note_app.ui.theme.MainBg
 import wade.owen.watt.note_app.ui.theme.NoteAppTheme
-import wade.owen.watt.note_app.ui.theme.PastelYellow
-import wade.owen.watt.note_app.ui.theme.SalmonPink
-import wade.owen.watt.note_app.ui.theme.SeaGreen
-import wade.owen.watt.note_app.ui.theme.Waterspout
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(navigateToNoteDetail: (Int) -> Unit) {
+
+    val homeViewModel: HomeViewModel = hiltViewModel<HomeViewModel>()
+    val uiState = homeViewModel.uiState.collectAsState()
+
     NoteAppTheme(
         darkTheme = true
     ) {
@@ -86,20 +69,33 @@ fun HomeScreen(navigateToNoteDetail: (Int) -> Unit) {
                 }
             }
         ) {
-            HomeScreenBody(modifier = Modifier, onTapItemNote = navigateToNoteDetail)
+            HomeScreenBody(
+                modifier = Modifier,
+                viewModel = homeViewModel,
+                uiState = uiState.value,
+                onTapItemNote = navigateToNoteDetail
+            )
         }
     }
 }
 
 /// Content Body
 @Composable
-private fun HomeScreenBody(modifier: Modifier, onTapItemNote: (Int) -> Unit) {
+private fun HomeScreenBody(
+    modifier: Modifier,
+    viewModel: HomeViewModel,
+    uiState: HomeUiState,
+    onTapItemNote: (Int) -> Unit,
+) {
     Box(modifier = Modifier.padding(horizontal = 25.dp)) {
         Column {
             AppBar()
-            HasItemBody(onTapItem = onTapItemNote)
+            if (uiState.listNote.isNullOrEmpty()) {
+                EmptyBody()
+            } else {
+                HasItemBody(onTapItem = onTapItemNote)
+            }
         }
-// EmptyBody()
     }
 }
 
