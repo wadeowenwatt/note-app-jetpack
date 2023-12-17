@@ -25,6 +25,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -36,6 +37,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import wade.owen.watt.note_app.R
 import wade.owen.watt.note_app.ui.compose.CustomIconButton
 import wade.owen.watt.note_app.ui.theme.NoteAppTheme
@@ -43,7 +45,11 @@ import wade.owen.watt.note_app.ui.theme.Typography
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NoteDetailScreen() {
+fun NoteDetailScreen(id: Int? = null) {
+
+    val viewModel: NoteDetailViewModel = hiltViewModel<NoteDetailViewModel>()
+    val uiState = viewModel.uiState.collectAsState()
+
     NoteAppTheme(
         darkTheme = true
     ) {
@@ -54,8 +60,8 @@ fun NoteDetailScreen() {
         ) {
             NoteDetailScreenBody(
                 viewingMode = false,
-                title = "Hôm nay ăn gì?Hôm nay ăn gì?Hôm nay ăn gì?Hôm nay ăn gì?",
-                content = "Hôm nay ăn rất nhiều bún bún bún búnbún bún búnbún bún búnbún bún búnbún bún bún Hôm nay ăn rất nhiều bún bún bún búnHôm nay ăn rất nhiều bún bún bún búnHôm nay ăn rất nhiều bún bún bún búnHôm nay ăn rất nhiều bún bún bún búnHôm nay ăn rất nhiều bún bún bún búnHôm nay ăn rất nhiều bún bún bún búnHôm nay ăn rất nhiều bún bún bún búnHôm nay ăn rất nhiều bún bún bún bún"
+                title = uiState.value.title ?: "",
+                content = uiState.value.content ?: "",
             )
         }
     }
@@ -96,7 +102,7 @@ fun NoteDetailScreenBody(viewingMode: Boolean, title: String, content: String) {
 fun EditBody(title: String, content: String) {
     Column {
         TextField(
-            value = "",
+            value = title,
             onValueChange = {
 
             },
@@ -112,7 +118,6 @@ fun EditBody(title: String, content: String) {
                 unfocusedContainerColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 unfocusedLabelColor = Color.Transparent,
-
             )
         )
         TextField(
@@ -123,7 +128,16 @@ fun EditBody(title: String, content: String) {
             textStyle = Typography.bodyLarge.copy(
                 fontSize = 23.sp, lineHeight = 30.sp
             ),
-
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = Color.White,
+                cursorColor = Color.White,
+                focusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                focusedLabelColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                unfocusedLabelColor = Color.Transparent,
+            )
         )
     }
 }
@@ -180,5 +194,5 @@ fun AppBar(onPreview: () -> Unit, onEdit: () -> Unit, onSave: () -> Unit, viewin
 @Preview(showSystemUi = true)
 @Composable
 fun PreviewNoteDetail() {
-    NoteDetailScreen()
+    NoteDetailScreen(0)
 }

@@ -13,7 +13,7 @@ fun NavController.navigateHome(
     this.navigate(homeRoute, navOptions)
 }
 
-fun NavGraphBuilder.homeScreen(navigateToNoteDetail: (Int) -> Unit) {
+fun NavGraphBuilder.homeScreen(navigateToNoteDetail: (Int?) -> Unit) {
     composable(homeRoute) {
         HomeScreen(navigateToNoteDetail)
     }

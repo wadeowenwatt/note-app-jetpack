@@ -23,7 +23,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +41,7 @@ import wade.owen.watt.note_app.ui.theme.NoteAppTheme
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(navigateToNoteDetail: (Int) -> Unit) {
+fun HomeScreen(navigateToNoteDetail: (Int?) -> Unit) {
 
     val homeViewModel: HomeViewModel = hiltViewModel<HomeViewModel>()
     val uiState = homeViewModel.uiState.collectAsState()
@@ -56,7 +55,10 @@ fun HomeScreen(navigateToNoteDetail: (Int) -> Unit) {
                 .background(color = MaterialTheme.colorScheme.background),
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = { /*TODO*/ }, shape = CircleShape,
+                    onClick = {
+                        navigateToNoteDetail(null)
+                    },
+                    shape = CircleShape,
                     containerColor = MainBg,
                     contentColor = Color.White,
                     modifier = Modifier.size(70.dp)
@@ -93,21 +95,24 @@ private fun HomeScreenBody(
             if (uiState.listNote.isNullOrEmpty()) {
                 EmptyBody()
             } else {
-                HasItemBody(onTapItem = onTapItemNote)
+                HasItemBody(onTapItem = onTapItemNote, uiState = uiState)
             }
         }
     }
 }
 
 @Composable
-fun HasItemBody(onTapItem: (Int) -> Unit) {
-    LazyColumn() {
-        items(10) {
-            ItemNoteSwipeable(
-                id = it,
-                title = "Tooi test thu xem sao Tooi test thu xem saoTooi test thu xem saoTooi test thu xem sao",
-                onTapItem = { onTapItem.invoke(it) }
-            )
+fun HasItemBody(onTapItem: (Int) -> Unit, uiState: HomeUiState) {
+    if (!uiState.listNote.isNullOrEmpty()) {
+        LazyColumn() {
+            items(uiState.listNote!!.size) {
+                val noteEntity = uiState.listNote!![it]
+                ItemNoteSwipeable(
+                    id = noteEntity.id,
+                    title = noteEntity.title,
+                    onTapItem = { onTapItem.invoke(it) }
+                )
+            }
         }
     }
 }

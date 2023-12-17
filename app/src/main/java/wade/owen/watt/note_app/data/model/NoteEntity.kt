@@ -7,7 +7,8 @@ import javax.annotation.Nonnull
 
 @Entity(tableName = "note")
 data class NoteEntity(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
     @Nonnull @ColumnInfo(name = "title")
     val title: String,
     @ColumnInfo(name = "content")
