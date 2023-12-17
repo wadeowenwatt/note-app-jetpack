@@ -56,7 +56,7 @@ fun HomeScreen(navigateToNoteDetail: (Int?) -> Unit) {
             floatingActionButton = {
                 FloatingActionButton(
                     onClick = {
-                        navigateToNoteDetail(null)
+                        navigateToNoteDetail.invoke(null)
                     },
                     shape = CircleShape,
                     containerColor = MainBg,

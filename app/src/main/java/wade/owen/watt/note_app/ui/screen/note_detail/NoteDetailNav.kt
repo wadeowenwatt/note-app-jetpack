@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 
-const val noteDetail = "note_detail_route?"
+const val noteDetail = "note_detail_route"
 
 fun NavController.navigateNoteDetail(
     id: Int? = null,

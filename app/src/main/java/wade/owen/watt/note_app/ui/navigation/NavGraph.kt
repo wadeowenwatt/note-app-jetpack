@@ -22,7 +22,9 @@ fun NavGraph() {
 
     NoteAppTheme(darkTheme = true) {
         NavHost(navController = navController, startDestination = homeRoute) {
-            homeScreen { navController.navigateNoteDetail() }
+            homeScreen {
+                navController.navigateNoteDetail(it)
+            }
             noteDetailScreen { navController.popBackStack() }
         }
     }
