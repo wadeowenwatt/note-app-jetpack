@@ -22,7 +22,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -34,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,8 +60,8 @@ fun NoteDetailScreen(id: Int? = null) {
         ) {
             NoteDetailScreenBody(
                 viewingMode = false,
-                title = uiState.value.title ?: "",
-                content = uiState.value.content ?: "",
+                state = uiState.value,
+                viewModel = viewModel,
             )
         }
     }
@@ -69,7 +69,11 @@ fun NoteDetailScreen(id: Int? = null) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NoteDetailScreenBody(viewingMode: Boolean, title: String, content: String) {
+fun NoteDetailScreenBody(
+    viewingMode: Boolean,
+    state: NoteDetailUiState,
+    viewModel: NoteDetailViewModel,
+) {
     var viewingModeState by rememberSaveable {
         mutableStateOf(viewingMode)
     }
@@ -78,7 +82,9 @@ fun NoteDetailScreenBody(viewingMode: Boolean, title: String, content: String) {
             stickyHeader {
                 AppBar(
                     viewingMode = viewingModeState,
-                    onSave = {},
+                    onSave = {
+                        viewModel.onSaveNote()
+                    },
                     onEdit = {
                         viewingModeState = false
                     },
@@ -87,9 +93,9 @@ fun NoteDetailScreenBody(viewingMode: Boolean, title: String, content: String) {
             }
             item {
                 if (viewingModeState) {
-                    ViewingBody(title, content)
+                    ViewingBody(state.title ?: "", state.content ?: "")
                 } else {
-                    EditBody(title, content)
+                    EditBody(state.title ?: "", state.content ?: "", viewModel)
                 }
             }
 
@@ -99,16 +105,24 @@ fun NoteDetailScreenBody(viewingMode: Boolean, title: String, content: String) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditBody(title: String, content: String) {
+fun EditBody(title: String, content: String, viewModel: NoteDetailViewModel) {
     Column {
         TextField(
             value = title,
             onValueChange = {
-
+                viewModel.onChangedTitle(it)
             },
             textStyle = Typography.bodyLarge.copy(
                 fontSize = 35.sp, lineHeight = 50.sp
             ),
+            placeholder = {
+                Text(
+                    text = stringResource(id = R.string.title_place_holder),
+                    style = Typography.bodyLarge.copy(
+                        fontSize = 35.sp, lineHeight = 50.sp
+                    ),
+                )
+            },
             colors = TextFieldDefaults.colors(
                 focusedTextColor = Color.White,
                 cursorColor = Color.White,
@@ -123,11 +137,19 @@ fun EditBody(title: String, content: String) {
         TextField(
             value = content,
             onValueChange = {
-
+                viewModel.onChangedContent(it)
             },
             textStyle = Typography.bodyLarge.copy(
                 fontSize = 23.sp, lineHeight = 30.sp
             ),
+            placeholder = {
+                Text(
+                    text = stringResource(id = R.string.content_place_holder),
+                    style = Typography.bodyLarge.copy(
+                        fontSize = 23.sp, lineHeight = 30.sp
+                    ),
+                )
+            },
             colors = TextFieldDefaults.colors(
                 focusedTextColor = Color.White,
                 cursorColor = Color.White,
@@ -144,7 +166,7 @@ fun EditBody(title: String, content: String) {
 
 @Composable
 fun ViewingBody(title: String, content: String) {
-    Column(modifier = Modifier.padding(top = 40.dp)) {
+    Column(modifier = Modifier.padding(top = 30.dp, start = 15.dp)) {
         Text(text = title, fontSize = 35.sp, lineHeight = 50.sp)
         Box(modifier = Modifier.height(30.dp))
         Text(text = content, fontSize = 23.sp, lineHeight = 30.sp)
@@ -195,4 +217,10 @@ fun AppBar(onPreview: () -> Unit, onEdit: () -> Unit, onSave: () -> Unit, viewin
 @Composable
 fun PreviewNoteDetail() {
     NoteDetailScreen(0)
+}
+
+@Preview(showSystemUi = true)
+@Composable
+fun PreviewViewingMode() {
+    ViewingBody("test", "test")
 }

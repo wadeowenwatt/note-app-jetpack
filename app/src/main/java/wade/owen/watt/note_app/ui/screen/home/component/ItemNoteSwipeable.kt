@@ -4,9 +4,12 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Delete
@@ -84,7 +87,7 @@ fun ItemNote(id: Int, title: String, deleteVisibility: Boolean, onTapItem: () ->
         else -> Waterspout
     }
     Card(
-        modifier = Modifier
+        modifier = Modifier.fillMaxWidth()
             .padding(top = 25.dp)
             .pointerInput(Unit) {
                 detectTapGestures(
@@ -107,6 +110,7 @@ fun ItemNote(id: Int, title: String, deleteVisibility: Boolean, onTapItem: () ->
             if (deleteVisibility) {
                 Box(
                     modifier = Modifier
+                        .fillMaxWidth()
                         .matchParentSize()
                         .background(Color.Red),
                 ) {

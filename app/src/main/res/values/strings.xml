@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Note App</string>
+    <string name="title_place_holder">Title</string>
+    <string name="content_place_holder">Type something…</string>
 </resources>
