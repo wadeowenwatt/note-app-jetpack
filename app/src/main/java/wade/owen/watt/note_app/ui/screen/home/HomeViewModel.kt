@@ -1,5 +1,6 @@
 package wade.owen.watt.note_app.ui.screen.home
 
+import android.os.Handler
 import android.util.Log
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
@@ -25,14 +26,26 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getAllNote() {
+        /// When note database change getAllNotes auto re-invoke
         viewModelScope.launch {
+            _uiState.value = HomeUiState(isLoading = true)
             noteRepo.getAllNotes().collect {
-                _uiState.value = HomeUiState(listNote = it)
+                _uiState.value = HomeUiState(listNote = it, isLoading = false)
+            }
+        }
+    }
+
+    fun deleteNote(index: Int) {
+        val note: NoteEntity? = _uiState.value.listNote?.get(index)
+        if (note != null) {
+            viewModelScope.launch {
+                noteRepo.deleteNote(note)
             }
         }
     }
 }
 
 data class HomeUiState(
+    var isLoading: Boolean = true,
     var listNote: List<NoteEntity>? = null,
 )

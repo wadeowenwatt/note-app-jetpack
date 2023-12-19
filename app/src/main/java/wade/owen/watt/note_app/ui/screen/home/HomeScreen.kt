@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -92,17 +93,31 @@ private fun HomeScreenBody(
     Box(modifier = Modifier.padding(horizontal = 25.dp)) {
         Column {
             AppBar()
-            if (uiState.listNote.isNullOrEmpty()) {
-                EmptyBody()
+            if (uiState.isLoading) {
+                Box(
+                    Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             } else {
-                HasItemBody(onTapItem = onTapItemNote, uiState = uiState)
+                if (uiState.listNote.isNullOrEmpty()) {
+                    EmptyBody()
+                } else {
+                    HasItemBody(
+                        onTapItem = onTapItemNote,
+                        uiState = uiState,
+                        viewModel = viewModel,
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-fun HasItemBody(onTapItem: (Int) -> Unit, uiState: HomeUiState) {
+fun HasItemBody(onTapItem: (Int) -> Unit, uiState: HomeUiState, viewModel: HomeViewModel) {
     if (!uiState.listNote.isNullOrEmpty()) {
         LazyColumn() {
             items(uiState.listNote!!.size) {
@@ -110,7 +125,10 @@ fun HasItemBody(onTapItem: (Int) -> Unit, uiState: HomeUiState) {
                 ItemNoteSwipeable(
                     id = noteEntity.id,
                     title = noteEntity.title,
-                    onTapItem = { onTapItem.invoke(it + 1) }
+                    onTapItem = { onTapItem.invoke(noteEntity.id) },
+                    onTapDelete = {
+                        viewModel.deleteNote(it)
+                    }
                 )
             }
         }

@@ -4,12 +4,10 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Delete
@@ -25,10 +23,9 @@ import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -43,15 +40,15 @@ import wade.owen.watt.note_app.ui.theme.Waterspout
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemNoteSwipeable(id: Int, title: String, onTapItem: () -> Unit) {
-    var deleteVisibility by rememberSaveable {
+fun ItemNoteSwipeable(id: Int, title: String, onTapItem: () -> Unit, onTapDelete: () -> Unit) {
+    val deleteVisibility = rememberSaveable {
         mutableStateOf(false)
     }
 
     val swipeState = rememberDismissState(
         confirmValueChange = {
             if (it == DismissValue.DismissedToStart) {
-                deleteVisibility = !deleteVisibility
+                deleteVisibility.value = !deleteVisibility.value
             }
             false
         },
@@ -72,13 +69,20 @@ fun ItemNoteSwipeable(id: Int, title: String, onTapItem: () -> Unit) {
                 title = title,
                 deleteVisibility = deleteVisibility,
                 onTapItem = onTapItem,
+                onTapDelete = onTapDelete,
             )
         },
     )
 }
 
 @Composable
-fun ItemNote(id: Int, title: String, deleteVisibility: Boolean, onTapItem: () -> Unit) {
+fun ItemNote(
+    id: Int,
+    title: String,
+    deleteVisibility: MutableState<Boolean>,
+    onTapItem: () -> Unit,
+    onTapDelete: () -> Unit
+) {
     val color: Color = when (id % 5) {
         0 -> Lavender
         1 -> SalmonPink
@@ -87,7 +91,8 @@ fun ItemNote(id: Int, title: String, deleteVisibility: Boolean, onTapItem: () ->
         else -> Waterspout
     }
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(top = 25.dp)
             .pointerInput(Unit) {
                 detectTapGestures(
@@ -102,12 +107,13 @@ fun ItemNote(id: Int, title: String, deleteVisibility: Boolean, onTapItem: () ->
         Box {
             Text(
                 text = title,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(vertical = 20.dp, horizontal = 45.dp),
                 fontSize = 25.sp,
                 color = Color.Black
             )
-            if (deleteVisibility) {
+            if (deleteVisibility.value) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -115,7 +121,11 @@ fun ItemNote(id: Int, title: String, deleteVisibility: Boolean, onTapItem: () ->
                         .background(Color.Red),
                 ) {
                     IconButton(
-                        onClick = { Log.e("linhtn1", "Note Item delete press!") },
+                        onClick = {
+                            Log.e("linhtn1", "Note Item delete press!")
+                            deleteVisibility.value = false
+                            onTapDelete()
+                        },
                         modifier = Modifier
                             .fillMaxSize()
                     ) {
@@ -133,14 +143,14 @@ fun ItemNote(id: Int, title: String, deleteVisibility: Boolean, onTapItem: () ->
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BackgroundDismiss(dismissState: DismissState, deleteState: Boolean) {
+fun BackgroundDismiss(dismissState: DismissState, deleteState: MutableState<Boolean>) {
     Card(
         modifier = Modifier.padding(top = 25.dp)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(if (deleteState) SeaGreen else Color.Red),
+                .background(if (deleteState.value) SeaGreen else Color.Red),
         ) {
             IconButton(
                 onClick = { Log.e("linhtn1", "Note Item delete press!") },
@@ -148,7 +158,7 @@ fun BackgroundDismiss(dismissState: DismissState, deleteState: Boolean) {
                     .fillMaxSize()
             ) {
                 Icon(
-                    imageVector = if (deleteState) {
+                    imageVector = if (deleteState.value) {
                         Icons.Rounded.ArrowBack
                     } else {
                         Icons.Rounded.Delete

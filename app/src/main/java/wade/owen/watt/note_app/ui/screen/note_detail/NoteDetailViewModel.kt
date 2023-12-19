@@ -1,23 +1,20 @@
 package wade.owen.watt.note_app.ui.screen.note_detail
 
-import android.util.Log
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import wade.owen.watt.note_app.data.local.dao.NoteDao
 import wade.owen.watt.note_app.data.model.NoteEntity
+import wade.owen.watt.note_app.domain.repository.NoteRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class NoteDetailViewModel @Inject constructor(
-    private val noteDao: NoteDao,
+    private val noteRepo: NoteRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private var _uiState = MutableStateFlow(NoteDetailUiState())
@@ -33,7 +30,7 @@ class NoteDetailViewModel @Inject constructor(
         if (id != null) {
             viewModelScope.launch {
                 /// When update note, get note func will call again
-                noteDao.getNoteDetail(id).collect {
+                noteRepo.getNote(id).collect {
                     _uiState.value = NoteDetailUiState(
                         id = it.id,
                         title = it.title,
@@ -65,7 +62,7 @@ class NoteDetailViewModel @Inject constructor(
                 content = _uiState.value.content ?: ""
             )
             viewModelScope.launch {
-                noteDao.insert(noteEntity)
+                noteRepo.insertNote(noteEntity)
             }
             onBack.invoke()
         } else {
@@ -75,7 +72,7 @@ class NoteDetailViewModel @Inject constructor(
                 content = _uiState.value.content ?: "",
             )
             viewModelScope.launch {
-                noteDao.update(noteEntity)
+                noteRepo.updateNote(noteEntity)
             }
         }
     }

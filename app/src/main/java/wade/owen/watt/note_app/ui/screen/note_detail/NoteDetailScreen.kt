@@ -85,11 +85,7 @@ fun NoteDetailScreenBody(
                 )
             }
             item {
-                if (state.viewingMode) {
-                    ViewingBody(state)
-                } else {
-                    EditBody(state, viewModel)
-                }
+                EditBody(state, viewModel)
             }
 
         }
@@ -101,6 +97,7 @@ fun EditBody(state: NoteDetailUiState, viewModel: NoteDetailViewModel) {
     Column {
         TextField(
             value = state.title ?: "",
+            enabled = !state.viewingMode,
             onValueChange = {
                 viewModel.onChangedTitle(it)
             },
@@ -117,6 +114,7 @@ fun EditBody(state: NoteDetailUiState, viewModel: NoteDetailViewModel) {
             },
             colors = TextFieldDefaults.colors(
                 focusedTextColor = Color.White,
+                disabledTextColor = Color.White,
                 cursorColor = Color.White,
                 focusedContainerColor = Color.Transparent,
                 focusedIndicatorColor = Color.Transparent,
@@ -124,10 +122,14 @@ fun EditBody(state: NoteDetailUiState, viewModel: NoteDetailViewModel) {
                 unfocusedContainerColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 unfocusedLabelColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                disabledLabelColor = Color.Transparent,
             )
         )
         TextField(
             value = state.content ?: "",
+            enabled = !state.viewingMode,
             onValueChange = {
                 viewModel.onChangedContent(it)
             },
@@ -144,6 +146,7 @@ fun EditBody(state: NoteDetailUiState, viewModel: NoteDetailViewModel) {
             },
             colors = TextFieldDefaults.colors(
                 focusedTextColor = Color.White,
+                disabledTextColor = Color.White,
                 cursorColor = Color.White,
                 focusedContainerColor = Color.Transparent,
                 focusedIndicatorColor = Color.Transparent,
@@ -151,17 +154,11 @@ fun EditBody(state: NoteDetailUiState, viewModel: NoteDetailViewModel) {
                 unfocusedContainerColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 unfocusedLabelColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                disabledLabelColor = Color.Transparent,
             )
         )
-    }
-}
-
-@Composable
-fun ViewingBody(state: NoteDetailUiState) {
-    Column(modifier = Modifier.padding(top = 30.dp, start = 15.dp)) {
-        Text(text = state.title ?: "", fontSize = 35.sp, lineHeight = 50.sp)
-        Box(modifier = Modifier.height(30.dp))
-        Text(text = state.content ?: "", fontSize = 23.sp, lineHeight = 30.sp)
     }
 }
 
