@@ -14,12 +14,12 @@ fun NavController.navigateNoteDetail(
     if (id == null) this.navigate(
         noteDetail,
         navOptions
-    ) else this.navigate(noteDetail.plus("?id=${id}}"), navOptions)
+    ) else this.navigate(noteDetail.plus("?id=${id}"), navOptions)
 }
 
 fun NavGraphBuilder.noteDetailScreen(navToBack: () -> Unit) {
     composable(noteDetail.plus("?id={id}")) {backStackEntry ->
-        val noteId = backStackEntry.arguments?.getInt("id")
-        NoteDetailScreen(noteId)
+//        val noteId = backStackEntry.arguments?.getInt("id")
+        NoteDetailScreen(navToBack)
     }
 }

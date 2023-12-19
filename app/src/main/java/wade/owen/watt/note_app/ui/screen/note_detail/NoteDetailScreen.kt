@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.rounded.KeyboardArrowLeft
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -25,10 +24,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,8 +40,7 @@ import wade.owen.watt.note_app.ui.theme.Typography
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NoteDetailScreen(id: Int? = null) {
-
+fun NoteDetailScreen(navToBack: () -> Unit) {
     val viewModel: NoteDetailViewModel = hiltViewModel<NoteDetailViewModel>()
     val uiState = viewModel.uiState.collectAsState()
 
@@ -59,9 +53,9 @@ fun NoteDetailScreen(id: Int? = null) {
                 .background(color = MaterialTheme.colorScheme.background),
         ) {
             NoteDetailScreenBody(
-                viewingMode = false,
                 state = uiState.value,
                 viewModel = viewModel,
+                onBack = navToBack,
             )
         }
     }
@@ -70,32 +64,31 @@ fun NoteDetailScreen(id: Int? = null) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NoteDetailScreenBody(
-    viewingMode: Boolean,
     state: NoteDetailUiState,
     viewModel: NoteDetailViewModel,
+    onBack: () -> Unit,
 ) {
-    var viewingModeState by rememberSaveable {
-        mutableStateOf(viewingMode)
-    }
     Box(modifier = Modifier.padding(horizontal = 25.dp)) {
         LazyColumn(contentPadding = PaddingValues(bottom = 25.dp)) {
             stickyHeader {
                 AppBar(
-                    viewingMode = viewingModeState,
+                    viewingMode = state.viewingMode,
+                    state = state,
+                    onBack = { onBack() },
                     onSave = {
-                        viewModel.onSaveNote()
+                        viewModel.onSaveNote(onBack = onBack)
                     },
                     onEdit = {
-                        viewingModeState = false
+                        viewModel.onChangeViewingMode(false)
                     },
-                    onPreview = { viewingModeState = true },
+                    onPreview = { viewModel.onChangeViewingMode(true) },
                 )
             }
             item {
-                if (viewingModeState) {
-                    ViewingBody(state.title ?: "", state.content ?: "")
+                if (state.viewingMode) {
+                    ViewingBody(state)
                 } else {
-                    EditBody(state.title ?: "", state.content ?: "", viewModel)
+                    EditBody(state, viewModel)
                 }
             }
 
@@ -103,12 +96,11 @@ fun NoteDetailScreenBody(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditBody(title: String, content: String, viewModel: NoteDetailViewModel) {
+fun EditBody(state: NoteDetailUiState, viewModel: NoteDetailViewModel) {
     Column {
         TextField(
-            value = title,
+            value = state.title ?: "",
             onValueChange = {
                 viewModel.onChangedTitle(it)
             },
@@ -135,7 +127,7 @@ fun EditBody(title: String, content: String, viewModel: NoteDetailViewModel) {
             )
         )
         TextField(
-            value = content,
+            value = state.content ?: "",
             onValueChange = {
                 viewModel.onChangedContent(it)
             },
@@ -165,16 +157,23 @@ fun EditBody(title: String, content: String, viewModel: NoteDetailViewModel) {
 }
 
 @Composable
-fun ViewingBody(title: String, content: String) {
+fun ViewingBody(state: NoteDetailUiState) {
     Column(modifier = Modifier.padding(top = 30.dp, start = 15.dp)) {
-        Text(text = title, fontSize = 35.sp, lineHeight = 50.sp)
+        Text(text = state.title ?: "", fontSize = 35.sp, lineHeight = 50.sp)
         Box(modifier = Modifier.height(30.dp))
-        Text(text = content, fontSize = 23.sp, lineHeight = 30.sp)
+        Text(text = state.content ?: "", fontSize = 23.sp, lineHeight = 30.sp)
     }
 }
 
 @Composable
-fun AppBar(onPreview: () -> Unit, onEdit: () -> Unit, onSave: () -> Unit, viewingMode: Boolean) {
+fun AppBar(
+    onPreview: () -> Unit,
+    onEdit: () -> Unit,
+    onSave: () -> Unit,
+    onBack: () -> Unit,
+    viewingMode: Boolean,
+    state: NoteDetailUiState,
+) {
     Row(
         Modifier
             .fillMaxWidth()
@@ -182,11 +181,10 @@ fun AppBar(onPreview: () -> Unit, onEdit: () -> Unit, onSave: () -> Unit, viewin
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(Modifier.weight(fill = true, weight = 1f)) {
-            /** Todo **/
             CustomIconButton(
-                onClick = { /** Todo **/ },
+                onClick = { onBack() },
                 icon = Icons.Rounded.KeyboardArrowLeft,
-                contentDescription = "search",
+                contentDescription = "back",
                 modifierIcon = Modifier.size(35.dp)
             )
         }
@@ -199,12 +197,14 @@ fun AppBar(onPreview: () -> Unit, onEdit: () -> Unit, onSave: () -> Unit, viewin
         } else {
             CustomIconButton(
                 onClick = onPreview,
+                enabled = !state.title.isNullOrEmpty() || !state.content.isNullOrEmpty(),
                 painter = painterResource(id = R.drawable.visibility),
                 contentDescription = "preview",
             )
             Box(modifier = Modifier.width(21.dp))
             CustomIconButton(
                 onClick = onSave,
+                enabled = !state.title.isNullOrEmpty(),
                 painter = painterResource(id = R.drawable.save),
                 contentDescription = "info"
             )
@@ -212,15 +212,8 @@ fun AppBar(onPreview: () -> Unit, onEdit: () -> Unit, onSave: () -> Unit, viewin
     }
 }
 
-
 @Preview(showSystemUi = true)
 @Composable
 fun PreviewNoteDetail() {
-    NoteDetailScreen(0)
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun PreviewViewingMode() {
-    ViewingBody("test", "test")
+    NoteDetailScreen {}
 }

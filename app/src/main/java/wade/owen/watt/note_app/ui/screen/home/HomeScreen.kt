@@ -110,7 +110,7 @@ fun HasItemBody(onTapItem: (Int) -> Unit, uiState: HomeUiState) {
                 ItemNoteSwipeable(
                     id = noteEntity.id,
                     title = noteEntity.title,
-                    onTapItem = { onTapItem.invoke(it) }
+                    onTapItem = { onTapItem.invoke(it + 1) }
                 )
             }
         }

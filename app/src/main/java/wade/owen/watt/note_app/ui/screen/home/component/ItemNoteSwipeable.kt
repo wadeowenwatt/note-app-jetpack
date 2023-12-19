@@ -102,7 +102,7 @@ fun ItemNote(id: Int, title: String, deleteVisibility: Boolean, onTapItem: () ->
         Box {
             Text(
                 text = title,
-                modifier = Modifier
+                modifier = Modifier.fillMaxWidth()
                     .padding(vertical = 20.dp, horizontal = 45.dp),
                 fontSize = 25.sp,
                 color = Color.Black

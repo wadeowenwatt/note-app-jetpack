@@ -18,6 +18,7 @@ import wade.owen.watt.note_app.ui.theme.IconButtonBg
 @Composable
 fun CustomIconButton(
     onClick: () -> Unit,
+    enabled: Boolean? = true,
     icon: ImageVector,
     contentDescription: String,
     modifier: Modifier = Modifier,
@@ -25,6 +26,7 @@ fun CustomIconButton(
 ) {
     Button(
         onClick = onClick,
+        enabled = enabled ?: true,
         shape = RoundedCornerShape(15.dp),
         modifier = modifier.size(50.dp),
         colors = ButtonDefaults.buttonColors(
@@ -44,6 +46,7 @@ fun CustomIconButton(
 @Composable
 fun CustomIconButton(
     onClick: () -> Unit,
+    enabled: Boolean? = true,
     painter: Painter,
     contentDescription: String,
     modifier: Modifier = Modifier,
@@ -51,6 +54,7 @@ fun CustomIconButton(
 ) {
     Button(
         onClick = onClick,
+        enabled = enabled ?: true,
         shape = RoundedCornerShape(15.dp),
         modifier = modifier.size(50.dp),
         colors = ButtonDefaults.buttonColors(
