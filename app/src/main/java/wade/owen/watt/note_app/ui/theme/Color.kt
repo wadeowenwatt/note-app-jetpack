@@ -20,7 +20,8 @@ val Red = Color.Red
 val SeaGreen = Color(0xFF30BE71)
 val RaisinBlack = Color(0xFF252525)
 val OliverBlack = Color(0xFF3B3B3B)
-
+val GreyDark = Color(0xFF606060)
+val GreyText = Color(0xFFCFCFCF)
 // Usage palette
 val MainBg = RaisinBlack
 val IconButtonBg = OliverBlack

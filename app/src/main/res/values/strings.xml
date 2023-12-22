@@ -2,4 +2,7 @@
     <string name="app_name">Note App</string>
     <string name="title_place_holder">Title</string>
     <string name="content_place_holder">Type something…</string>
+    <string name="save_changes">Save changes ?</string>
+    <string name="discard_changes">Discard your changes ?</string>
+    <string name="delete_note">Delete this note ?</string>
 </resources>

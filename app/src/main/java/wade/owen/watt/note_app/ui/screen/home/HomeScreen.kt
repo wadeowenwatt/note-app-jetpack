@@ -25,6 +25,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,7 +38,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import wade.owen.watt.note_app.R
+import wade.owen.watt.note_app.ui.compose.AppAlertDialog
 import wade.owen.watt.note_app.ui.compose.CustomIconButton
+import wade.owen.watt.note_app.ui.compose.InfoDialog
 import wade.owen.watt.note_app.ui.screen.home.component.ItemNoteSwipeable
 import wade.owen.watt.note_app.ui.theme.MainBg
 import wade.owen.watt.note_app.ui.theme.NoteAppTheme
@@ -118,6 +123,10 @@ private fun HomeScreenBody(
 
 @Composable
 fun HasItemBody(onTapItem: (Int) -> Unit, uiState: HomeUiState, viewModel: HomeViewModel) {
+    val openAlertDialog = rememberSaveable {
+        mutableStateOf(false)
+    }
+
     if (!uiState.listNote.isNullOrEmpty()) {
         LazyColumn() {
             items(uiState.listNote!!.size) {
@@ -131,6 +140,16 @@ fun HasItemBody(onTapItem: (Int) -> Unit, uiState: HomeUiState, viewModel: HomeV
                     }
                 )
             }
+        }
+    }
+
+    when {
+        openAlertDialog.value -> {
+            AppAlertDialog(
+                onDismissRequest = { openAlertDialog.value = false },
+                onReject = {},
+                onConfirm = { },
+            )
         }
     }
 }
@@ -152,6 +171,10 @@ private fun EmptyBody() {
 /// Small Component
 @Composable
 private fun AppBar() {
+    val openInfoDialog = rememberSaveable {
+        mutableStateOf(false)
+    }
+
     Row(
         Modifier
             .fillMaxWidth()
@@ -173,10 +196,17 @@ private fun AppBar() {
         )
         Box(modifier = Modifier.width(21.dp))
         CustomIconButton(
-            onClick = { /*TODO*/ },
+            onClick = { openInfoDialog.value = true },
             icon = Icons.Outlined.Info,
             contentDescription = "info"
         )
+    }
+    when {
+        openInfoDialog.value -> {
+            InfoDialog {
+                openInfoDialog.value = false
+            }
+        }
     }
 }
 
