@@ -24,6 +24,8 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import wade.owen.watt.note_app.R
+import wade.owen.watt.note_app.ui.compose.AppAlertDialog
 import wade.owen.watt.note_app.ui.compose.CustomIconButton
 import wade.owen.watt.note_app.ui.theme.NoteAppTheme
 import wade.owen.watt.note_app.ui.theme.Typography
@@ -171,6 +174,45 @@ fun AppBar(
     viewingMode: Boolean,
     state: NoteDetailUiState,
 ) {
+    val openSaveAlertDialog = rememberSaveable {
+        mutableStateOf(false)
+    }
+    val openDiscardChangeAlertDialog = rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    when {
+        openSaveAlertDialog.value -> {
+            AppAlertDialog(
+                onDismissRequest = { openSaveAlertDialog.value = false },
+                onConfirm = {
+                    onSave()
+                    openSaveAlertDialog.value = false
+                },
+                onReject = {
+                    openDiscardChangeAlertDialog.value = true
+                    openSaveAlertDialog.value = false
+                },
+                title = stringResource(id = R.string.save_changes),
+            )
+        }
+
+        openDiscardChangeAlertDialog.value -> {
+            AppAlertDialog(
+                onDismissRequest = { openDiscardChangeAlertDialog.value = false },
+                onConfirm = {
+                    openDiscardChangeAlertDialog.value = false
+                },
+                onReject = {
+                    onBack()
+                    openDiscardChangeAlertDialog.value = false
+                },
+                title = stringResource(id = R.string.discard_changes),
+                textConfirmBtn = stringResource(id = R.string.keep),
+            )
+        }
+    }
+
     Row(
         Modifier
             .fillMaxWidth()
@@ -179,7 +221,16 @@ fun AppBar(
     ) {
         Box(Modifier.weight(fill = true, weight = 1f)) {
             CustomIconButton(
-                onClick = { onBack() },
+                onClick = {
+                    if ((state.title.isNullOrEmpty() && state.content.isNullOrEmpty())
+                        || (state.tempTitle.equals(state.title)
+                        && state.tempContent.equals(state.content))
+                    ) {
+                        onBack()
+                    } else {
+                        openDiscardChangeAlertDialog.value = true
+                    }
+                },
                 icon = Icons.Rounded.KeyboardArrowLeft,
                 contentDescription = "back",
                 modifierIcon = Modifier.size(35.dp)
@@ -200,7 +251,9 @@ fun AppBar(
             )
             Box(modifier = Modifier.width(21.dp))
             CustomIconButton(
-                onClick = onSave,
+                onClick = {
+                    openSaveAlertDialog.value = true
+                },
                 enabled = !state.title.isNullOrEmpty(),
                 painter = painterResource(id = R.drawable.save),
                 contentDescription = "info"

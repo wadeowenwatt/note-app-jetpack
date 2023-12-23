@@ -29,8 +29,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import wade.owen.watt.note_app.R
+import wade.owen.watt.note_app.ui.compose.AppAlertDialog
 import wade.owen.watt.note_app.ui.theme.Lavender
 import wade.owen.watt.note_app.ui.theme.LightGreen
 import wade.owen.watt.note_app.ui.theme.PastelYellow
@@ -44,7 +47,31 @@ fun ItemNoteSwipeable(id: Int, title: String, onTapItem: () -> Unit, onTapDelete
     val deleteVisibility = rememberSaveable {
         mutableStateOf(false)
     }
+    val openAlertDialog = rememberSaveable {
+        mutableStateOf(false)
+    }
 
+    when {
+        openAlertDialog.value -> {
+            AppAlertDialog(
+                textConfirmBtn = stringResource(id = R.string.delete),
+                textRejectBtn = stringResource(id = R.string.cancel),
+                title = stringResource(id = R.string.delete_note),
+                onDismissRequest = {
+                    openAlertDialog.value = false
+                    deleteVisibility.value = false
+                },
+                onReject = {
+                    openAlertDialog.value = false
+                    deleteVisibility.value = false
+                },
+                onConfirm = {
+                    onTapDelete()
+                    deleteVisibility.value = false
+                },
+            )
+        }
+    }
     val swipeState = rememberDismissState(
         confirmValueChange = {
             if (it == DismissValue.DismissedToStart) {
@@ -69,7 +96,9 @@ fun ItemNoteSwipeable(id: Int, title: String, onTapItem: () -> Unit, onTapDelete
                 title = title,
                 deleteVisibility = deleteVisibility,
                 onTapItem = onTapItem,
-                onTapDelete = onTapDelete,
+                onTapDelete = {
+                    openAlertDialog.value = true
+                },
             )
         },
     )
@@ -123,7 +152,6 @@ fun ItemNote(
                     IconButton(
                         onClick = {
                             Log.e("linhtn1", "Note Item delete press!")
-                            deleteVisibility.value = false
                             onTapDelete()
                         },
                         modifier = Modifier

@@ -46,6 +46,7 @@ fun InfoDialog(onDismissRequest: () -> Unit) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
+                    colors = CardDefaults.cardColors(MainBg),
                     shape = RoundedCornerShape(16.dp),
                 ) {
                     Column(
@@ -53,13 +54,13 @@ fun InfoDialog(onDismissRequest: () -> Unit) {
                             .fillMaxWidth()
                             .padding(start = 28.dp, end = 28.dp, top = 38.dp, bottom = 40.dp)
                     ) {
-                        Text(text = "Designed by - ")
-                        Text(text = "Redesigned by - ")
-                        Text(text = "Illustrations - ")
-                        Text(text = "Icons - ")
-                        Text(text = "Font - ")
+                        GreyTextDialog(text = "Designed by - ")
+                        GreyTextDialog(text = "Redesigned by - ")
+                        GreyTextDialog(text = "Illustrations - ")
+                        GreyTextDialog(text = "Icons - ")
+                        GreyTextDialog(text = "Font - ")
                         Box(modifier = Modifier.height(20.dp))
-                        Text(
+                        GreyTextDialog(
                             text = "Made by",
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth()
@@ -126,7 +127,7 @@ fun AppAlertDialog(
                     ) {
                         Box(Modifier.weight(fill = true, weight = 0.5f)) {
                             ElevatedButton(
-                                onClick = onConfirm,
+                                onClick = onReject,
                                 modifier = Modifier.fillMaxWidth(),
                                 shape = RoundedCornerShape(5.dp),
                                 colors = ButtonDefaults.buttonColors(
@@ -142,7 +143,7 @@ fun AppAlertDialog(
                         Box(modifier = Modifier.weight(fill = true, weight = 0.15f))
                         Box(Modifier.weight(fill = true, weight = 0.5f)) {
                             ElevatedButton(
-                                onClick = onReject,
+                                onClick = onConfirm,
                                 shape = RoundedCornerShape(5.dp),
                                 modifier = Modifier.fillMaxWidth(),
                                 colors = ButtonDefaults.buttonColors(
@@ -163,8 +164,17 @@ fun AppAlertDialog(
 }
 
 @Composable
-fun GreyTextDialog(text: String) {
-    Text(text = text, style = Typography.bodyLarge.copy(color = GreyText))
+fun GreyTextDialog(
+    text: String,
+    textAlign: TextAlign = TextAlign.Start,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = text,
+        style = Typography.bodyLarge.copy(color = GreyText),
+        modifier = modifier,
+        textAlign = textAlign,
+    )
 }
 
 @Preview(showBackground = true)

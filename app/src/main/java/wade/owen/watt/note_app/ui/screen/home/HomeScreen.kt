@@ -123,9 +123,6 @@ private fun HomeScreenBody(
 
 @Composable
 fun HasItemBody(onTapItem: (Int) -> Unit, uiState: HomeUiState, viewModel: HomeViewModel) {
-    val openAlertDialog = rememberSaveable {
-        mutableStateOf(false)
-    }
 
     if (!uiState.listNote.isNullOrEmpty()) {
         LazyColumn() {
@@ -140,16 +137,6 @@ fun HasItemBody(onTapItem: (Int) -> Unit, uiState: HomeUiState, viewModel: HomeV
                     }
                 )
             }
-        }
-    }
-
-    when {
-        openAlertDialog.value -> {
-            AppAlertDialog(
-                onDismissRequest = { openAlertDialog.value = false },
-                onReject = {},
-                onConfirm = { },
-            )
         }
     }
 }

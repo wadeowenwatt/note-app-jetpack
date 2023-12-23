@@ -34,7 +34,9 @@ class NoteDetailViewModel @Inject constructor(
                     _uiState.value = NoteDetailUiState(
                         id = it.id,
                         title = it.title,
+                        tempTitle = it.title,
                         content = it.content,
+                        tempContent = it.content,
                         viewingMode = true,
                     )
                 }
@@ -97,6 +99,8 @@ class NoteDetailViewModel @Inject constructor(
 data class NoteDetailUiState(
     var id: Int? = null,
     var title: String? = null,
+    var tempTitle: String? = null,
     var content: String? = null,
+    var tempContent: String? = null,
     var viewingMode: Boolean = false,
 )
