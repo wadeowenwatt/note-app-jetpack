@@ -7,8 +7,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import wade.owen.watt.note_app.ui.screen.home.homeRoute
 import wade.owen.watt.note_app.ui.screen.home.homeScreen
+import wade.owen.watt.note_app.ui.screen.home.navigateHome
 import wade.owen.watt.note_app.ui.screen.note_detail.navigateNoteDetail
 import wade.owen.watt.note_app.ui.screen.note_detail.noteDetailScreen
+import wade.owen.watt.note_app.ui.screen.splash.splashRoute
+import wade.owen.watt.note_app.ui.screen.splash.splashScreen
 import wade.owen.watt.note_app.ui.theme.NoteAppTheme
 
 @Composable
@@ -19,11 +22,10 @@ fun NavGraph() {
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
 
     NoteAppTheme(darkTheme = true) {
-        NavHost(navController = navController, startDestination = homeRoute) {
-            homeScreen {
-                navController.navigateNoteDetail(it)
-            }
+        NavHost(navController = navController, startDestination = splashRoute) {
+            homeScreen { navController.navigateNoteDetail(it) }
             noteDetailScreen { navController.popBackStack() }
+            splashScreen { navController.navigateHome() }
         }
     }
 }
