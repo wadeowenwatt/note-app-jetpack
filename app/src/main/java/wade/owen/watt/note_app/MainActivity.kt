@@ -8,6 +8,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import wade.owen.watt.note_app.ui.navigation.NavGraph
 import wade.owen.watt.note_app.ui.screen.home.HomeScreen
 import wade.owen.watt.note_app.ui.screen.note_detail.NoteDetailScreen
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

@@ -26,9 +26,10 @@ fun AnimatedSplashScreen(navigateToHome: () -> Unit) {
     var startAnimation by remember {
         mutableStateOf(false)
     }
-    var alphaAnim = animateFloatAsState(
+    val alphaAnim = animateFloatAsState(
         targetValue = if (startAnimation) 1f else 0f,
-        animationSpec = tween(3000)
+        animationSpec = tween(3000),
+        label = "animation_logo",
     )
 
     LaunchedEffect(key1 = true) {
@@ -47,6 +48,10 @@ fun Splash(alpha: Float) {
             .background(if (isSystemInDarkTheme()) Color.Black else Color.White),
         contentAlignment = Alignment.Center
     ) {
-        Image(painter = painterResource(id = R.drawable.app_icon), modifier = Modifier.alpha(alpha), contentDescription = "app-icon")
+        Image(
+            painter = painterResource(id = R.drawable.app_icon),
+            modifier = Modifier.alpha(alpha),
+            contentDescription = "app-icon"
+        )
     }
 }
