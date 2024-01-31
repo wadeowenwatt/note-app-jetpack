@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "581193320020",
+    "project_id": "base-app-34778",
+    "storage_bucket": "base-app-34778.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:581193320020:android:e630dfac64cf9116618fc1",
+        "android_client_info": {
+          "package_name": "wade.owen.watt.note_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7OU65iR90NDKv_WiWrNdXg9IiE3BcOUI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

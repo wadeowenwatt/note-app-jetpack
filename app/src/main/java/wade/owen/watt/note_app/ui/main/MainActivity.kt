@@ -1,4 +1,4 @@
-package wade.owen.watt.note_app
+package wade.owen.watt.note_app.ui.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

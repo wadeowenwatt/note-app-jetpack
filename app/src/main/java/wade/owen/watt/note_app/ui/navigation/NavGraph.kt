@@ -10,6 +10,8 @@ import wade.owen.watt.note_app.ui.screen.home.homeScreen
 import wade.owen.watt.note_app.ui.screen.home.navigateHome
 import wade.owen.watt.note_app.ui.screen.note_detail.navigateNoteDetail
 import wade.owen.watt.note_app.ui.screen.note_detail.noteDetailScreen
+import wade.owen.watt.note_app.ui.screen.sign_in.navigateToSignIn
+import wade.owen.watt.note_app.ui.screen.sign_in.signInScreen
 import wade.owen.watt.note_app.ui.screen.splash.splashRoute
 import wade.owen.watt.note_app.ui.screen.splash.splashScreen
 import wade.owen.watt.note_app.ui.theme.NoteAppTheme
@@ -23,9 +25,10 @@ fun NavGraph() {
 
     NoteAppTheme(darkTheme = true) {
         NavHost(navController = navController, startDestination = splashRoute) {
+            splashScreen { navController.navigateToSignIn() }
+            signInScreen { }
             homeScreen { navController.navigateNoteDetail(it) }
             noteDetailScreen { navController.popBackStack() }
-            splashScreen { navController.navigateHome() }
         }
     }
 }
