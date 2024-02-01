@@ -1,4 +1,4 @@
-package wade.owen.watt.note_app.ui.main
+package wade.owen.watt.note_app.ui.screen.main
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,8 +12,13 @@ class MainViewModel @Inject constructor(): ViewModel() {
     val uiState: StateFlow<MainUiState> get() = _uiState
 
 
+    private fun updateUiState(
+
+    ) {
+
+    }
 }
 
 data class MainUiState(
-    var username: String? = null,
+    var currentUser: Any? = null,
 )

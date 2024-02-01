@@ -24,7 +24,7 @@
             android:value="@string/facebook_client_token" />
 
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".ui.screen.main.MainActivity"
             android:exported="true"></activity>
         <activity
             android:name=".ui.screen.splash.SplashActivity"

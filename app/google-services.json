@@ -12,7 +12,20 @@
           "package_name": "wade.owen.watt.note_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "581193320020-5r5lgsq0m7hanpn5mb2368vu3ac9sq54.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "wade.owen.watt.note_app",
+            "certificate_hash": "6db7d62e794440c67c113e4b8bbd4b9c3caf68e5"
+          }
+        },
+        {
+          "client_id": "581193320020-1pfkjismtacl641jfv9grgosblba6fhp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA7OU65iR90NDKv_WiWrNdXg9IiE3BcOUI"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "581193320020-1pfkjismtacl641jfv9grgosblba6fhp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
