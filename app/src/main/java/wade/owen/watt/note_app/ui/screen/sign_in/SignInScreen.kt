@@ -9,10 +9,15 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -130,56 +135,75 @@ fun SignInScreen() {
 
     NoteAppTheme(darkTheme = false) {
         Scaffold(modifier = Modifier.fillMaxSize()) {
-            Column {
-                Image(
-                    painter = painterResource(id = R.drawable.app_icon),
-                    contentDescription = "app_ic"
-                )
-                TextField(
-                    value = uiState.value.username ?: "",
-                    onValueChange = {
-                        viewModel.onChangedUsername(it)
-                    },
-                )
-                TextField(
-                    value = uiState.value.password ?: "",
-                    onValueChange = {
-                        viewModel.onChangedPassword(it)
-                    },
-                )
-                Row {
+            LazyColumn {
+                item {
                     Image(
-                        painter = painterResource(id = R.drawable.ic_facebook),
-                        contentDescription = "ic_fb",
-                        modifier = Modifier.clickable {
-                            launcherFb.launch(listOf("public_profile"))
+                        painter = painterResource(id = R.drawable.app_icon),
+                        contentDescription = "app_ic"
+                    )
+                }
+                item {
+                    TextField(
+                        value = uiState.value.username ?: "",
+                        onValueChange = {
+                            viewModel.onChangedUsername(it)
                         },
                     )
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_x),
-                        contentDescription = "ic_x",
-                        modifier = Modifier.clickable {
+                }
+                item {
+                    TextField(
+                        value = uiState.value.password ?: "",
+                        onValueChange = {
+                            viewModel.onChangedPassword(it)
+                        },
+                    )
+                }
+                item {
+                    Row {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_facebook),
+                            contentDescription = "ic_fb",
+                            modifier = Modifier.clickable {
+                                launcherFb.launch(listOf("public_profile"))
+                            },
+                        )
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_x),
+                            contentDescription = "ic_x",
+                            modifier = Modifier.clickable {
 
-                        },
-                    )
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_google),
-                        contentDescription = "ic_gg",
-                        modifier = Modifier.clickable {
-                            val gso =
-                                GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                                    .requestIdToken(token).requestEmail().build()
-                            val googleSignInClient = GoogleSignIn.getClient(context, gso)
-                            launcherGg.launch(googleSignInClient.signInIntent)
-                        },
-                    )
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_google),
-                        contentDescription = "ic_gg",
-                        modifier = Modifier.clickable {
-                            Firebase.auth.signOut()
-                        },
-                    )
+                            },
+                        )
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_google),
+                            contentDescription = "ic_gg",
+                            modifier = Modifier.clickable {
+                                val gso =
+                                    GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                        .requestIdToken(token).requestEmail().build()
+                                val googleSignInClient = GoogleSignIn.getClient(context, gso)
+                                launcherGg.launch(googleSignInClient.signInIntent)
+                            },
+                        )
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_google),
+                            contentDescription = "ic_gg",
+                            modifier = Modifier.clickable {
+                                Firebase.auth.signOut()
+                            },
+                        )
+                    }
+                }
+
+                item {
+                    TextButton(onClick = { Firebase.auth.signOut() }) {
+                        Text(text = "Sign out")
+                    }
+                    TextButton(onClick = {
+                        print(Firebase.auth.currentUser)
+                    }) {
+                        Text(text = "Test")
+                    }
                 }
             }
         }
