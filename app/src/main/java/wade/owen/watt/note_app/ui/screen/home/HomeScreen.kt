@@ -25,7 +25,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -37,8 +36,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import wade.owen.watt.note_app.R
-import wade.owen.watt.note_app.ui.compose.AppAlertDialog
 import wade.owen.watt.note_app.ui.compose.CustomIconButton
 import wade.owen.watt.note_app.ui.compose.InfoDialog
 import wade.owen.watt.note_app.ui.screen.home.component.ItemNoteSwipeable
@@ -47,9 +47,13 @@ import wade.owen.watt.note_app.ui.theme.NoteAppTheme
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(navigateToNoteDetail: (Int?) -> Unit) {
+fun HomeScreen(
+    homeViewModel: HomeViewModel,
+    navigateToNoteDetail: (Int?) -> Unit,
+    navigateToSignIn: () -> Unit
+) {
 
-    val homeViewModel: HomeViewModel = hiltViewModel<HomeViewModel>()
+//    val homeViewModel: HomeViewModel = hiltViewModel<HomeViewModel>()
     val uiState = homeViewModel.uiState.collectAsState()
 
     NoteAppTheme(
@@ -81,7 +85,8 @@ fun HomeScreen(navigateToNoteDetail: (Int?) -> Unit) {
                 modifier = Modifier,
                 viewModel = homeViewModel,
                 uiState = uiState.value,
-                onTapItemNote = navigateToNoteDetail
+                onTapItemNote = navigateToNoteDetail,
+                onTapSignOut = navigateToSignIn,
             )
         }
     }
@@ -94,10 +99,13 @@ private fun HomeScreenBody(
     viewModel: HomeViewModel,
     uiState: HomeUiState,
     onTapItemNote: (Int) -> Unit,
+    onTapSignOut: () -> Unit,
 ) {
     Box(modifier = Modifier.padding(horizontal = 25.dp)) {
         Column {
-            AppBar()
+            AppBar(
+                onTapSignOut,
+            )
             if (uiState.isLoading) {
                 Box(
                     Modifier
@@ -157,7 +165,7 @@ private fun EmptyBody() {
 
 /// Small Component
 @Composable
-private fun AppBar() {
+private fun AppBar(onTapSignOut: () -> Unit) {
     val openInfoDialog = rememberSaveable {
         mutableStateOf(false)
     }
@@ -177,7 +185,10 @@ private fun AppBar() {
         }
         /** Todo **/
         CustomIconButton(
-            onClick = { /** Todo **/ },
+            onClick = {
+                Firebase.auth.signOut()
+                onTapSignOut()
+            },
             icon = Icons.Rounded.Search,
             contentDescription = "search",
         )
@@ -200,5 +211,12 @@ private fun AppBar() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun GreetingPreview() {
-    HomeScreen {}
+    HomeScreen(
+        hiltViewModel<HomeViewModel>(),
+        {
+
+        },
+    ) {
+
+    }
 }

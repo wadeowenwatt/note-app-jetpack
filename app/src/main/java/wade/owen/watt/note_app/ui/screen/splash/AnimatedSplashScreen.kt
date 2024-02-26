@@ -18,11 +18,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.delay
 import wade.owen.watt.note_app.R
 
 @Composable
-fun AnimatedSplashScreen(navigateToHome: () -> Unit) {
+fun AnimatedSplashScreen(navigateToLogin: () -> Unit, navigateToHome: () -> Unit) {
     var startAnimation by remember {
         mutableStateOf(false)
     }
@@ -35,9 +37,22 @@ fun AnimatedSplashScreen(navigateToHome: () -> Unit) {
     LaunchedEffect(key1 = true) {
         startAnimation = true
         delay(4000)
-        navigateToHome.invoke()
+//        navigateToHome.invoke()
+        checkLogin(
+            navigateToLogin,
+            navigateToHome,
+        )
     }
     Splash(alphaAnim.value)
+}
+
+fun checkLogin(navigateToLogin: () -> Unit, navigateToHome: () -> Unit) {
+    var user = Firebase.auth.currentUser
+    if (user != null) {
+        navigateToHome.invoke()
+    } else {
+        navigateToLogin.invoke()
+    }
 }
 
 @Composable

@@ -1,5 +1,6 @@
 package wade.owen.watt.note_app.ui.screen.home
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -13,10 +14,16 @@ fun NavController.navigateHome(
     this.navigate(homeRoute, navOptions)
 }
 
-fun NavGraphBuilder.homeScreen(navigateToNoteDetail: (Int?) -> Unit) {
+fun NavGraphBuilder.homeScreen(navigateToNoteDetail: (Int?) -> Unit, navigateToSignIn: () -> Unit) {
     composable(homeRoute) {
-        HomeScreen(navigateToNoteDetail = {
-            navigateToNoteDetail.invoke(it)
-        })
+        HomeScreen(
+            hiltViewModel<HomeViewModel>(),
+            navigateToNoteDetail = {
+                navigateToNoteDetail.invoke(it)
+            },
+            navigateToSignIn = {
+                navigateToSignIn.invoke()
+            }
+        )
     }
 }

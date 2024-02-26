@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +27,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
+import wade.owen.watt.note_app.ui.screen.main.MainViewModel
 import wade.owen.watt.note_app.ui.theme.GreyDark
 import wade.owen.watt.note_app.ui.theme.GreyText
 import wade.owen.watt.note_app.ui.theme.MainBg
@@ -36,6 +39,8 @@ import wade.owen.watt.note_app.ui.theme.Typography
 
 @Composable
 fun InfoDialog(onDismissRequest: () -> Unit) {
+    val appVm: MainViewModel = hiltViewModel<MainViewModel>()
+    val uiState = appVm.uiState.collectAsState()
     NoteAppTheme(
         darkTheme = true
     ) {
@@ -54,6 +59,8 @@ fun InfoDialog(onDismissRequest: () -> Unit) {
                             .fillMaxWidth()
                             .padding(start = 28.dp, end = 28.dp, top = 38.dp, bottom = 40.dp)
                     ) {
+
+                        GreyTextDialog(text = "HELLO - ${uiState.value.currentUser.toString()}")
                         GreyTextDialog(text = "Designed by - ")
                         GreyTextDialog(text = "Redesigned by - ")
                         GreyTextDialog(text = "Illustrations - ")

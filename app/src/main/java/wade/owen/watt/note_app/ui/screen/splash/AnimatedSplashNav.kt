@@ -13,10 +13,12 @@ fun NavController.navigateSplash(
     this.navigate(splashRoute, navOptions)
 }
 
-fun NavGraphBuilder.splashScreen(navigateToHome: () -> Unit) {
+fun NavGraphBuilder.splashScreen(navigateToLogin: () -> Unit, navigateToHome: () -> Unit) {
     composable(splashRoute) {
-        AnimatedSplashScreen {
-            navigateToHome.invoke()
-        }
+        AnimatedSplashScreen(
+            navigateToHome = { navigateToHome.invoke() },
+            navigateToLogin = { navigateToLogin.invoke() }
+        )
+
     }
 }

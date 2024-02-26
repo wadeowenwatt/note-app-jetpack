@@ -99,6 +99,9 @@ dependencies {
     implementation("com.facebook.android:facebook-login:latest.release")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+
+    // Import firebase firestore
+    implementation("com.google.firebase:firebase-firestore")
 }
 
 // Allow references to generated code
