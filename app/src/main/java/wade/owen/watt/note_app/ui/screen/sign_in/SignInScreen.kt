@@ -99,7 +99,7 @@ fun SignInScreen(
 
     val launcherGg = rememberFirebaseAuthLauncher(
         onAuthComplete = {
-
+            print("abc")
         },
         onAuthError = {}
     )
@@ -188,11 +188,12 @@ fun SignInScreen(
                             painter = painterResource(id = R.drawable.ic_google),
                             contentDescription = "ic_gg",
                             modifier = Modifier.clickable {
-                                val gso =
-                                    GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                                        .requestIdToken(token).requestEmail().build()
-                                val googleSignInClient = GoogleSignIn.getClient(context, gso)
-                                launcherGg.launch(googleSignInClient.signInIntent)
+//                                val gso =
+//                                    GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                                        .requestIdToken(token).requestEmail().build()
+//                                val googleSignInClient = GoogleSignIn.getClient(context, gso)
+//                                launcherGg.launch(googleSignInClient.signInIntent)
+                                viewModel.loginWithGoogle(context = context, launcher = launcherGg)
                             },
                         )
                     }
