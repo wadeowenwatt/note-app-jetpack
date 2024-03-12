@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
 import androidx.lifecycle.ViewModel
+import com.facebook.CallbackManager.ActivityResultParameters
 import com.facebook.login.LoginManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,8 +30,11 @@ class SignInViewModel @Inject constructor(
         updateUiState(password = password)
     }
 
-    fun loginWithFacebook() {
+    fun loginWithFacebook(
+        launcher: ManagedActivityResultLauncher<Collection<String>, ActivityResultParameters>
+    ) {
 
+        authRepo.signInWithFacebook(launcher)
     }
 
     fun loginWithGoogle(

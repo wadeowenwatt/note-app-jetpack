@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
+import com.facebook.CallbackManager.ActivityResultParameters
 
 interface AuthRepository {
     fun signInWithEmail(
@@ -15,5 +16,7 @@ interface AuthRepository {
         launcher: ManagedActivityResultLauncher<Intent, ActivityResult>
     )
 
-    fun signInWithFacebook()
+    fun signInWithFacebook(
+        launcher: ManagedActivityResultLauncher<Collection<String>, ActivityResultParameters>
+    )
 }
